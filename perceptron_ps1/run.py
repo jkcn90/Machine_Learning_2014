@@ -23,6 +23,7 @@ import create_feature_vector
 split_training_data.run()
 
 # Part 2: Transform each email in the training set into a feature vector
-feature_vector_list = create_feature_vector.run()
+# The output is a list of tuples: (feature_vector, is_spam) for each email
+feature_vector_and_is_spam_list = create_feature_vectors.run()
 
 print('Script complete')
