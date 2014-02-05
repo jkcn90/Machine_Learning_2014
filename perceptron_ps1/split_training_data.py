@@ -13,6 +13,9 @@ def slice_text_file(input_file, output_file, start_line, end_line):
             for line in output_data:
                 f_output.write(line)
 
-if __name__ == '__main__':
+def run():
     create_training_set('./input_data/spam_train.txt', './output_data/')
     create_validation_set('./input_data/spam_train.txt', './output_data/')
+
+if __name__ == '__main__':
+    run()

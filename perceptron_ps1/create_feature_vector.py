@@ -34,9 +34,13 @@ def create_feature_vector(email, vocabulary_list):
     feature_vector = [1 if word in email else 0 for word in vocabulary_list]
     return feature_vector
 
-if __name__ == '__main__':
+def run():
     raw_email_list = file_to_list('./output_data/training_set')
     email_list = clean_email_list(raw_email_list)
     vocabulary_list = create_vocabulary_list(email_list, 30)
     feature_vector_list = create_feature_vector_list(email_list, vocabulary_list)
+    return feature_vector_list
+
+if __name__ == '__main__':
+    feature_vector_list = run()
     print(feature_vector_list)
