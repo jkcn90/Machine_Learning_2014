@@ -78,6 +78,8 @@ print('Problem 7:')
 N = [100, 200, 400, 800, 2000, 4000]
 validation_set_error_n_list = []
 validation_set_error_averaged_n_list = []
+number_of_runs_list = []
+number_of_runs_averaged_list = []
 
 for n in N:
     # Perceptron Algorithm data
@@ -86,6 +88,7 @@ for n in N:
      number_of_runs_n) = perceptron.perceptron_train(
                             feature_vector_list_training, is_spam_list_training,
                             maximum_number_of_data_to_read=n)
+    number_of_runs_list.append(number_of_runs_n)
 
     # Averaged Perceptron Algorithm data
     (weight_vector_averaged_n,
@@ -93,6 +96,7 @@ for n in N:
      number_of_runs_averaged_n) = perceptron.perceptron_train_averaged(
                                         feature_vector_list_training, is_spam_list_training,
                                         maximum_number_of_data_to_read=n)
+    number_of_runs_averaged_list.append(number_of_runs_averaged_n)
 
     # Perceptron Algorithm Validation error
     validation_set_error_n = perceptron.perceptron_test(
@@ -117,16 +121,36 @@ y = [float(validation_error)*100 for validation_error in validation_set_error_n_
 y_averaged = [float(validation_error)*100 
               for validation_error in validation_set_error_averaged_n_list]
 
-p1 = pylab.plot(N, y)
-p2 = pylab.plot(N, y_averaged)
+pylab.plot(N, y)
+pylab.plot(N, y_averaged)
 
 pylab.xlabel('Number of Rows (n)')
 pylab.ylabel('Validation Error (% scale of 100)')
-pylab.title('About as simple as it gets, folks')
+pylab.title('Validation Error as a function of Number of Rows of Data')
 pylab.grid(True)
 pylab.legend(['Perceptron Algorithm', 'Averaged Perceptron Algorithm'])
-pylab.savefig("test.png")
+pylab.savefig("Validation_Error_Graph.png")
+#pylab.show()
+pylab.close()
+pylab.clf()
+
+# Part 8: Perceptron Iterations as a function of N
+print('N: ' + str(N))
+print('Number of Iterations for Perceptron Algorithm: ' + str(number_of_runs_list))
+# Plot data
+y = number_of_runs_list
+
+pylab.plot(N, y)
+
+pylab.xlabel('Number of Rows (n)')
+pylab.ylabel('Number of Iterations (n'')')
+pylab.title('Number of Iterations as a function of Number of Rows of Data')
+pylab.ylim((min(y), max(y)+1))
+pylab.grid(True)
+pylab.savefig("Number_of_Iterations_Graph.png")
 pylab.show()
+pylab.close()
+pylab.clf()
 
 print('\n=========================================================================================')
 print('Script complete')
