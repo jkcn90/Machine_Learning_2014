@@ -27,8 +27,7 @@ def perceptron_train_averaged(feature_vector_list, is_spam_list,
                               maximum_number_of_iterations,
                               display_intermediate_steps)
 
-    averaged_weight_vector = sum(weight_vectors_list) / len(weight_vectors_list)
-    averaged_weight_vectora = sum(weight_vectors_list)
+    averaged_weight_vector = sum(weight_vectors_list) / float(len(weight_vectors_list))
     total_number_of_misclassifications = sum(number_of_misclassifications_list)
 
     return (averaged_weight_vector, total_number_of_misclassifications, number_of_runs)
