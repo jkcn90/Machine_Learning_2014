@@ -17,12 +17,14 @@ def perceptron_test(weight_vector, feature_vector_list, is_spam_list):
 
 def perceptron_train_averaged(feature_vector_list, is_spam_list,
                               maximum_number_of_data_to_read=float('Inf'),
+                              maximum_number_of_iterations=float('Inf'),
                               display_intermediate_steps=False):
     (weight_vectors_list,
      number_of_misclassifications_list,
      number_of_runs
      ) = perceptron_train_raw(feature_vector_list, is_spam_list,
                               maximum_number_of_data_to_read,
+                              maximum_number_of_iterations,
                               display_intermediate_steps)
 
     averaged_weight_vector = sum(weight_vectors_list) / len(weight_vectors_list)
@@ -33,12 +35,14 @@ def perceptron_train_averaged(feature_vector_list, is_spam_list,
 
 def perceptron_train(feature_vector_list, is_spam_list,
                      maximum_number_of_data_to_read=float('Inf'),
+                     maximum_number_of_iterations=float('Inf'),
                      display_intermediate_steps=False):
     (weight_vectors_list,
      number_of_misclassifications_list,
      number_of_runs
      ) = perceptron_train_raw(feature_vector_list, is_spam_list,
                               maximum_number_of_data_to_read,
+                              maximum_number_of_iterations,
                               display_intermediate_steps)
 
     weight_vector = weight_vectors_list[-1]
@@ -47,6 +51,7 @@ def perceptron_train(feature_vector_list, is_spam_list,
 
 def perceptron_train_raw(feature_vector_list, is_spam_list,
                          maximum_number_of_data_to_read=float('Inf'),
+                         maximum_number_of_iterations=float('Inf'),
                          display_intermediate_steps=False):
     # Initialize a zero weight vector
     weight_vector = np.zeros(shape=feature_vector_list[0].size, dtype=int)
@@ -71,6 +76,9 @@ def perceptron_train_raw(feature_vector_list, is_spam_list,
         weight_vectors_list.append(weight_vector)
         if display_intermediate_steps:
             print('Number of misclassifications: ' + str(number_of_misclassifications))
+
+        if number_of_runs > maximum_number_of_iterations:
+            break
     return (weight_vectors_list, number_of_misclassifications_list, number_of_runs)
 
 def perceptron_train_iter(weight_vector, feature_vector_list,
