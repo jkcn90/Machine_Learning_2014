@@ -1,4 +1,5 @@
 import itertools
+import numpy as np
 from collections import Counter
 
 def file_to_list(file_name):
@@ -42,6 +43,8 @@ def run(input_file, vocabulary_list = []):
         vocabulary_list = create_vocabulary_list(email_list, 30)
 
     feature_vector_list = create_feature_vector_list(email_list, vocabulary_list)
+    feature_vector_list = np.array(feature_vector_list)
+    is_spam_list = np.array(is_spam_list)
     return (feature_vector_list, is_spam_list, vocabulary_list)
 
 if __name__ == '__main__':
