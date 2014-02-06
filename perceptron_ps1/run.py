@@ -107,21 +107,24 @@ for n in N:
                                             is_spam_list_validation)
     validation_set_error_averaged_n_list.append(validation_set_error_averaged_n)
 
-print(validation_set_error_n_list)
-print(validation_set_error_averaged_n_list)
+print('N: ' + str(N))
+print('Validation Error for Perceptron Algorithm: ' + str(validation_set_error_n_list))
+print('Validation Error for Averaged Perceptron Algorithm: ' +
+        str(validation_set_error_averaged_n_list))
 
 # Plot data
 y = [float(validation_error)*100 for validation_error in validation_set_error_n_list]
 y_averaged = [float(validation_error)*100 
               for validation_error in validation_set_error_averaged_n_list]
 
-pylab.plot(N, y)
-pylab.plot(N, y_averaged)
+p1 = pylab.plot(N, y)
+p2 = pylab.plot(N, y_averaged)
 
 pylab.xlabel('Number of Rows (n)')
 pylab.ylabel('Validation Error (% scale of 100)')
 pylab.title('About as simple as it gets, folks')
 pylab.grid(True)
+pylab.legend(['Perceptron Algorithm', 'Averaged Perceptron Algorithm'])
 pylab.savefig("test.png")
 pylab.show()
 
