@@ -1,6 +1,7 @@
 *.pdf
 *.swp
 *.pyc
+*.png
 
 **/input_data
 **/output_data

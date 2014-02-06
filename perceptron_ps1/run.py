@@ -1,5 +1,6 @@
 import os
 import shutil
+import pylab
 
 # Check that input data exists, clean output data and ensure folder exists
 input_directory = 'input_data'
@@ -108,6 +109,21 @@ for n in N:
 
 print(validation_set_error_n_list)
 print(validation_set_error_averaged_n_list)
+
+# Plot data
+y = [float(validation_error)*100 for validation_error in validation_set_error_n_list]
+y_averaged = [float(validation_error)*100 
+              for validation_error in validation_set_error_averaged_n_list]
+
+pylab.plot(N, y)
+pylab.plot(N, y_averaged)
+
+pylab.xlabel('Number of Rows (n)')
+pylab.ylabel('Validation Error (% scale of 100)')
+pylab.title('About as simple as it gets, folks')
+pylab.grid(True)
+pylab.savefig("test.png")
+pylab.show()
 
 print('\n=========================================================================================')
 print('Script complete')
