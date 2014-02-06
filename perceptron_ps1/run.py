@@ -148,7 +148,7 @@ pylab.title('Number of Iterations as a function of Number of Rows of Data')
 pylab.ylim((min(y), max(y)+1))
 pylab.grid(True)
 pylab.savefig("Number_of_Iterations_Graph.png")
-pylab.show()
+#pylab.show()
 pylab.close()
 pylab.clf()
 
