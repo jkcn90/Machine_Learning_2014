@@ -13,7 +13,7 @@ def file_to_list(file_name):
 def clean_email_list(raw_email_list):
     # Each line will start with a boolean value indicating if it is spam or not. Seperate this
     # value. Our output will be (message, True/False).
-    email_list_and_boolean = [(set(coordinate[1:].split()), coordinate[0] == '1')
+    email_list_and_boolean = [(set(coordinate[1:].split()), 1 if coordinate[0] == '1' else -1)
                               for coordinate in raw_email_list]
     (email_list, is_spam) = zip(*email_list_and_boolean)
     return (email_list, is_spam)
@@ -34,14 +34,17 @@ def create_feature_vector(email, vocabulary_list):
     feature_vector = [1 if word in email else 0 for word in vocabulary_list]
     return feature_vector
 
-def run():
-    raw_email_list = file_to_list('./output_data/training_set')
-    (email_list, is_spam) = clean_email_list(raw_email_list)
-    vocabulary_list = create_vocabulary_list(email_list, 30)
+def run(input_file, vocabulary_list = []):
+    raw_email_list = file_to_list(input_file)
+    (email_list, is_spam_list) = clean_email_list(raw_email_list)
+
+    if len(vocabulary_list) == 0:
+        vocabulary_list = create_vocabulary_list(email_list, 30)
+
     feature_vector_list = create_feature_vector_list(email_list, vocabulary_list)
-    feature_vector_and_is_spam_list = list(zip(feature_vector_list, is_spam))
-    return feature_vector_and_is_spam_list
+    return (feature_vector_list, is_spam_list, vocabulary_list)
 
 if __name__ == '__main__':
-    feature_vector_and_is_spam_list= run()
-    print(feature_vector_and_is_spam_list)
+    (feature_vector_list, is_spam_list) = run('./output_data/training_set')
+    print(feature_vector_list)
+    print(is_spam_list)
