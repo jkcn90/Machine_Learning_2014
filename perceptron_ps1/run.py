@@ -135,6 +135,8 @@ pylab.close()
 pylab.clf()
 
 # Part 8: Perceptron Iterations as a function of N
+print('Problem 8:')
+print('\n=========================================================================================')
 print('N: ' + str(N))
 print('Number of Iterations for Perceptron Algorithm: ' + str(number_of_runs_list))
 # Plot data
@@ -151,6 +153,35 @@ pylab.savefig("Number_of_Iterations_Graph.png")
 #pylab.show()
 pylab.close()
 pylab.clf()
+
+
+# Part 9/10: Find a good configuration that gives a low validation error on the validation set
+print('Problem 9/10:')
+print('\n=========================================================================================')
+
+# Part 10: Train on the initial training set and give the error on the testing set
+print('Problem 10:')
+print('\n=========================================================================================')
+
+# Train on the entire training set
+(spam_feature_vector_list_training,
+ spam_is_spam_list_training,
+ spam_vocabulary_list) = create_feature_vectors.run('./input_data/spam_train.txt')
+
+# Run the Perceptron Algorithm of choice
+(spam_weight_vector, _, _) = perceptron.perceptron_train(
+                                spam_feature_vector_list_training, spam_is_spam_list_training)
+
+# Get Validation error on the testing set
+(spam_feature_vector_list_validation,
+ spam_is_spam_list_validation,
+ _) = create_feature_vectors.run('./input_data/spam_test.txt', spam_vocabulary_list)
+
+spam_validation_set_error = perceptron.perceptron_test(spam_weight_vector,
+                                                       spam_feature_vector_list_validation,
+                                                       spam_is_spam_list_validation)
+
+print('Validation set error for testing set: ' + str(spam_validation_set_error))
 
 print('\n=========================================================================================')
 print('Script complete')
