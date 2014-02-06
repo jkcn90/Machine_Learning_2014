@@ -113,9 +113,14 @@ if __name__ == '__main__':
     (feature_vector_list_training,
      is_spam_list_training,
      vocabulary_list) = create_feature_vectors.run('./output_data/training_set')
-    (weight_vector, _, _) = perceptron_train(
+    (weight_vector,
+     total_number_of_misclassifications,
+     number_of_runs) = perceptron_train(
                                 feature_vector_list_training, is_spam_list_training,
                                 display_intermediate_steps=True)
+
+    print('Total number of misclassifications: ' + str(total_number_of_misclassifications))
+    print('Number of runs: ' + str(number_of_runs))
 
     # Verify error on the training set
     error = perceptron_test(weight_vector, feature_vector_list_training, is_spam_list_training)

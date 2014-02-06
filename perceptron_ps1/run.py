@@ -45,11 +45,12 @@ sorted_weight_index_least_to_greatest = sorted(range(len(weight_vector)),
                                                key=lambda k: weight_vector[k])
 top_most_positive_weights = [vocabulary_list[index]
                              for index in sorted_weight_index_least_to_greatest[-15:]]
+top_most_positive_weights = list(reversed(top_most_positive_weights))
+
 top_most_negative_weights = [vocabulary_list[index]
                              for index in sorted_weight_index_least_to_greatest[:15]]
 
 print("Top 15 words with most positive weights: " + str(top_most_positive_weights))
-
 print("Top 15 words with most negative weights: " + str(top_most_negative_weights))
 
 # Part 6: Run the averaged perceptron algorithm where the weight vector is the average of all the
