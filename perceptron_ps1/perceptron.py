@@ -62,6 +62,8 @@ def perceptron_train_raw(feature_vector_list, is_spam_list,
     number_of_runs = 0
 
     while number_of_misclassifications > 0:
+        if number_of_runs >= maximum_number_of_iterations:
+            break
         number_of_runs += 1
         if display_intermediate_steps:
             print('Processing Run: ' + str(number_of_runs))
@@ -76,8 +78,6 @@ def perceptron_train_raw(feature_vector_list, is_spam_list,
         if display_intermediate_steps:
             print('Number of misclassifications: ' + str(number_of_misclassifications))
 
-        if number_of_runs > maximum_number_of_iterations:
-            break
     return (weight_vectors_list, number_of_misclassifications_list, number_of_runs)
 
 def perceptron_train_iter(weight_vector, feature_vector_list,

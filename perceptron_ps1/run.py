@@ -135,8 +135,8 @@ pylab.close()
 pylab.clf()
 
 # Part 8: Perceptron Iterations as a function of N
-print('Problem 8:')
 print('\n=========================================================================================')
+print('Problem 8:')
 print('N: ' + str(N))
 print('Number of Iterations for Perceptron Algorithm: ' + str(number_of_runs_list))
 # Plot data
@@ -156,12 +156,49 @@ pylab.clf()
 
 
 # Part 9/10: Find a good configuration that gives a low validation error on the validation set
-print('Problem 9/10:')
 print('\n=========================================================================================')
+print('Problem 9/10:')
+
+iterations_list = range(1, 15)
+validation_set_error_iterations_list = []
+validation_set_error_averaged_iterations_list = []
+
+for iterations in iterations_list:
+    # Perceptron Algorithm data
+    (weight_vector_iterations,
+     total_number_of_misclassifications_iterations,
+     number_of_runs_iterations) = perceptron.perceptron_train(
+                            feature_vector_list_training, is_spam_list_training,
+                            maximum_number_of_iterations=iterations)
+
+    # Averaged Perceptron Algorithm data
+    (weight_vector_averaged_iterations,
+     total_number_of_misclassifications_averaged_iterations,
+     number_of_runs_averaged_iterations) = perceptron.perceptron_train_averaged(
+                                        feature_vector_list_training, is_spam_list_training,
+                                        maximum_number_of_iterations=iterations)
+
+    # Perceptron Algorithm Validation error
+    validation_set_error_iterations = perceptron.perceptron_test(
+                                weight_vector_iterations, feature_vector_list_validation,
+                                is_spam_list_validation)
+    validation_set_error_iterations_list.append(validation_set_error_iterations)
+
+    # Averaged Perceptron Algorithm Validation error
+    validation_set_error_averaged_iterations = perceptron.perceptron_test(
+                                            weight_vector_averaged_iterations,
+                                            feature_vector_list_validation,
+                                            is_spam_list_validation)
+    validation_set_error_averaged_iterations_list.append(validation_set_error_averaged_iterations)
+
+print('Maximum number of iterations: ' + str(iterations_list))
+print('Validation Error for Perceptron Algorithm: ' + str(validation_set_error_iterations_list))
+print('Validation Error for Averaged Perceptron Algorithm: ' +
+        str(validation_set_error_averaged_iterations_list))
 
 # Part 10: Train on the initial training set and give the error on the testing set
-print('Problem 10:')
 print('\n=========================================================================================')
+print('Problem 10:')
 
 # Train on the entire training set
 (spam_feature_vector_list_training,
@@ -169,8 +206,9 @@ print('\n=======================================================================
  spam_vocabulary_list) = create_feature_vectors.run('./input_data/spam_train.txt')
 
 # Run the Perceptron Algorithm of choice
-(spam_weight_vector, _, _) = perceptron.perceptron_train(
-                                spam_feature_vector_list_training, spam_is_spam_list_training)
+(spam_weight_vector, _, r) = perceptron.perceptron_train_averaged(
+                                spam_feature_vector_list_training,
+                                spam_is_spam_list_training)
 
 # Get Validation error on the testing set
 (spam_feature_vector_list_validation,
