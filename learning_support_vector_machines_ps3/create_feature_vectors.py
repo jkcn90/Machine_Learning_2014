@@ -19,6 +19,15 @@ def clean_email_list(raw_email_list):
     (email_list, is_spam) = zip(*email_list_and_boolean)
     return (email_list, is_spam)
 
+def clean_mnist_list(raw_mnist_list):
+    # Each line will start with an integer value indicating what number it is. Seperate this
+    # value. Our output will be (feature vector, integer).
+    mnist_list_and_integer = [([2*int(x)/255 - 1 for x in coordinate[1:].split(',') if x != ''],
+                               int(coordinate[0]))
+                              for coordinate in raw_mnist_list]
+    (mnist_list, integer) = zip(*mnist_list_and_integer)
+    return (mnist_list, integer)
+
 def create_vocabulary_list(email_list, threshold):
     vocabulary_list_and_count = Counter(itertools.chain.from_iterable(email_list))
     vocabulary_list = [word for (word, count)
@@ -35,7 +44,7 @@ def create_feature_vector(email, vocabulary_list):
     feature_vector = [1 if word in email else 0 for word in vocabulary_list]
     return feature_vector
 
-def run(input_file, vocabulary_list = []):
+def run_spam(input_file, vocabulary_list = []):
     raw_email_list = file_to_list(input_file)
     (email_list, is_spam_list) = clean_email_list(raw_email_list)
 
@@ -46,6 +55,14 @@ def run(input_file, vocabulary_list = []):
     feature_vector_list = np.array(feature_vector_list)
     is_spam_list = np.array(is_spam_list)
     return (feature_vector_list, is_spam_list, vocabulary_list)
+
+def run_mnist(input_file):
+    raw_mnist_list = file_to_list(input_file)
+    (feature_vector_list, integer) = clean_mnist_list(raw_mnist_list)
+
+    feature_vector_list = np.array(feature_vector_list)
+    integer_list = np.array(integer)
+    return (feature_vector_list, integer_list)
 
 if __name__ == '__main__':
     (feature_vector_list, is_spam_list) = run('./output_data/training_set')
