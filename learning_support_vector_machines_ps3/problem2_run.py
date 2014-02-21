@@ -14,14 +14,54 @@ def run():
     # Transform each email in the training set into a feature vector
     (feature_vector_list_training,
      integer_list_training) = create_feature_vectors.run_mnist('./input_data/mnist_train.txt')
+
+    (feature_vector_list_testing,
+     integer_list_testing) = create_feature_vectors.run_mnist('./input_data/mnist_test.txt')
     
     # Part 2 a/b: Train a multi-class svm model using cross-validation and 
     print('\n=====================================================================================')
     print('Problem 2 Use cross-validation to find the best classifier:')
-    lambda_ = pow(2, -5)
-    classifier = multi_class_prediction.multi_class_prediction_train(
-                    feature_vector_list_training, integer_list_training, lambda_)
+    cross_validation_error_list = []
 
-    cross_validation_error = multi_class_prediction.multi_class_prediction_cross_validation_test(
-                                classifier, feature_vector_list_training, integer_list_training, 5)
-    print(cross_validation_error)
+    lambda_set = [pow(2, exponent) for exponent in range(-5, 2)]
+    
+    for lambda_ in lambda_set:
+        print('Processing lamba: ' + str(lambda_))
+        cross_validation_error = multi_class_prediction.multi_class_prediction_cross_validation(
+                                    feature_vector_list_training, integer_list_training, lambda_, 5)
+        print(cross_validation_error)
+        cross_validation_error_list.append(cross_validation_error)
+
+    cross_validation_error_list = [100*cross_validation_error 
+                                   for cross_validation_error 
+                                   in cross_validation_error_list]
+
+    # Plot data ------------------------------------------------------------------------------------
+    pylab.plot(lambda_set, cross_validation_error_list)
+    
+    pylab.xlabel('lambda')
+    pylab.ylabel('Cross validation error (% out of 100')
+    pylab.title('Cross validation error as a function of lambda')
+    pylab.legend(['Cross Validation Error'], loc=2)
+    pylab.grid(True)
+    pylab.savefig("Cross_validation_error_lambda.png")
+    pylab.show()
+    pylab.close()
+    pylab.clf()
+    # End plot data --------------------------------------------------------------------------------
+
+    print('\n=====================================================================================')
+    print('Problem 2 Find error on test set using classifier with least error:')
+    (minimum_index, minimum_cross_validation_error) = min(enumerate(cross_validation_error_list),
+                                                          key = itemgetter(1))
+    minimum_lambda = lambda_set[minimum_index]
+    print('The best lambda value is: ' + str(minimum_lambda) + ' (with error: ' +
+            str(minimum_cross_validation_error) + ')')
+
+    classifier = multi_class_prediction.multi_class_prediction_train(
+                    feature_vector_list_training, integer_list_training, minimum_lambda)
+
+    test_error = multi_class_prediction_test(classifier, feature_vector_list_testing,
+                                             integer_list_testing)
+    
+    print('The test error is: ' + str(test_error))

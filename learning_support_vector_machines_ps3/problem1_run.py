@@ -98,7 +98,6 @@ def run():
                                      in average_validation_error_list]
     
     # Plot data ------------------------------------------------------------------------------------
-    m = len(feature_vector_list_training)
     log_lambda = [math.log(lambda_, 2) for lambda_ in lambda_set]
     
     # Plot logic
