@@ -22,7 +22,7 @@ def clean_email_list(raw_email_list):
 def clean_mnist_list(raw_mnist_list):
     # Each line will start with an integer value indicating what number it is. Seperate this
     # value. Our output will be (feature vector, integer).
-    mnist_list_and_integer = [([2*int(x)/255 - 1 for x in coordinate[1:].split(',') if x != ''],
+    mnist_list_and_integer = [([2*int(x)/255.0 - 1 for x in coordinate[1:].split(',') if x != ''],
                                int(coordinate[0]))
                               for coordinate in raw_mnist_list]
     (mnist_list, integer) = zip(*mnist_list_and_integer)

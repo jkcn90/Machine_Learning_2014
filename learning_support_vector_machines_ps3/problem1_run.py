@@ -10,7 +10,7 @@ import pegasos_svm
 
 def run():
     # Part 1
-    print('\n=========================================================================================')
+    print('\n=====================================================================================')
     print('Problem 1 Preparing data:')
     # Split Training data into training and validation set
     split_training_data.run()
@@ -20,14 +20,14 @@ def run():
      is_spam_list_training,
      vocabulary_list) = create_feature_vectors.run_spam('./output_data/training_set')
     
-    print('\n=========================================================================================')
+    print('\n=====================================================================================')
     print('Problem 1 Creating "svm objective as a function of iterations" graph:')
     # Part 1a: Plot the svm objective as a function of iterations
     (weight_vector, svm_objective_list) = pegasos_svm.pegasos_svm_train(feature_vector_list_training,
                                                                         is_spam_list_training,
                                                                         pow(2, -5))
     
-    # Plot data ----------------------------------------------------------------------------------------
+    # Plot data ------------------------------------------------------------------------------------
     m = len(feature_vector_list_training)
     iterations = [(i+1)*m for i in range(0, len(svm_objective_list))]
     
@@ -41,9 +41,9 @@ def run():
     #pylab.show()
     pylab.close()
     pylab.clf()
-    # End plot data ------------------------------------------------------------------------------------
+    # End plot data --------------------------------------------------------------------------------
     
-    print('\n=========================================================================================')
+    print('\n=====================================================================================')
     print('Problem 1 Creating "Training Error as a function of lambda" graph:')
     # Part 1b/c:
     # Setup validation error data
@@ -97,7 +97,7 @@ def run():
                                      for average_validation_error 
                                      in average_validation_error_list]
     
-    # Plot data ----------------------------------------------------------------------------------------
+    # Plot data ------------------------------------------------------------------------------------
     m = len(feature_vector_list_training)
     log_lambda = [math.log(lambda_, 2) for lambda_ in lambda_set]
     
@@ -115,9 +115,9 @@ def run():
     #pylab.show()
     pylab.close()
     pylab.clf()
-    # End plot data ------------------------------------------------------------------------------------
+    # End plot data --------------------------------------------------------------------------------
     
-    print('\n=========================================================================================')
+    print('\n=====================================================================================')
     print('Problem 1 Evaluating values:')
     # Print results for part 1:
     (minimum_index, minimum_average_validation_error) = min(enumerate(average_validation_error_list),
