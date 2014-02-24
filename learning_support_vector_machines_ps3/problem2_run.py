@@ -29,7 +29,7 @@ def run():
         print('Processing lamba: ' + str(lambda_))
         cross_validation_error = multi_class_prediction.multi_class_prediction_cross_validation(
                                     feature_vector_list_training, integer_list_training, lambda_, 5)
-        print(cross_validation_error)
+        print('Cross validation error: ' + str(cross_validation_error))
         cross_validation_error_list.append(cross_validation_error)
 
     cross_validation_error_list = [100*cross_validation_error 
@@ -61,7 +61,7 @@ def run():
     classifier = multi_class_prediction.multi_class_prediction_train(
                     feature_vector_list_training, integer_list_training, minimum_lambda)
 
-    test_error = multi_class_prediction_test(classifier, feature_vector_list_testing,
-                                             integer_list_testing)
+    test_error = multi_class_prediction.multi_class_prediction_test(
+                    classifier, feature_vector_list_testing, integer_list_testing)
     
     print('The test error is: ' + str(test_error))

@@ -49,7 +49,7 @@ def run():
     # Setup validation error data
     (feature_vector_list_validation,
      is_spam_list_validation,
-     _) = create_feature_vectors.run('./output_data/validation_set', vocabulary_list)
+     _) = create_feature_vectors.run_spam('./output_data/validation_set', vocabulary_list)
     
     # Setup data for loop
     lambda_set = [pow(2,power) for power in range(-9, 2)]
@@ -129,7 +129,7 @@ def run():
     # Setup test set data
     (feature_vector_list_test,
      is_spam_list_test,
-     _) = create_feature_vectors.run('./input_data/spam_test.txt', vocabulary_list)
+     _) = create_feature_vectors.run_spam('./input_data/spam_test.txt', vocabulary_list)
     
     test_set_error = pegasos_svm.pegasos_svm_test(minimum_validation_error_classifier,
                                                   feature_vector_list_test,

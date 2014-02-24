@@ -3,19 +3,23 @@ import math
 from operator import itemgetter
 from pegasos_svm import pegasos_svm_train
 
+CURSOR_UP_ONE = '\x1b[1A'
+ERASE_LINE = '\x1b[2K'
+
 def multi_class_prediction_cross_validation(feature_vector_list, integer_list, lambda_, k):
     validation_error_list = []
 
     # Split out the data into sections containing k data points.
-    number_of_k_sections = int(math.ceil(len(feature_vector_list)/float(k)))
+    data_in_each_part = int(math.ceil(len(feature_vector_list)/float(k)))
     
-    for offset in range(0, number_of_k_sections):
+    for offset in range(0, k):
+        print('Processing section: ' + str(offset+1) + '/' + str(k))
         # Feature vector and integer list setup for training and validation
         feature_vector_list_index_end = len(feature_vector_list)
-        offset_end = min(k*offset+k, feature_vector_list_index_end)
+        offset_end = min(data_in_each_part*(offset+1), feature_vector_list_index_end)
 
         index_training = range(0, offset) + range(offset_end, feature_vector_list_index_end)
-        index_validation = range(k*offset, offset_end)
+        index_validation = range(data_in_each_part*offset, offset_end)
 
         feature_vector_list_training = feature_vector_list[index_training]
         feature_vector_list_validation = feature_vector_list[index_validation]
@@ -30,6 +34,7 @@ def multi_class_prediction_cross_validation(feature_vector_list, integer_list, l
         validation_error = multi_class_prediction_test(classifier, feature_vector_list_validation,
                                                        integer_list_validation)
         validation_error_list.append(validation_error)
+        print(CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE)
 
     averaged_validation_error = sum(validation_error_list)/float(len(validation_error_list))
     return averaged_validation_error
