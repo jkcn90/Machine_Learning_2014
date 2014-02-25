@@ -46,7 +46,7 @@ def run():
     pylab.legend(['Cross Validation Error'], loc=2)
     pylab.grid(True)
     pylab.savefig("Cross_validation_error_lambda.png")
-    pylab.show()
+    #pylab.show()
     pylab.close()
     pylab.clf()
     # End plot data --------------------------------------------------------------------------------
