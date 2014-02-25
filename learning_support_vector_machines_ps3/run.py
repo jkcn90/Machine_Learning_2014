@@ -19,9 +19,9 @@ else:
 import problem1_run
 import problem2_run
 
-#problem1_run.run()
-#problem1_run.run()
+problem1_run.run()
 problem2_run.run()
+problem2_run.run_libsvm()
 
 print('\n=========================================================================================')
 print('Script complete')
