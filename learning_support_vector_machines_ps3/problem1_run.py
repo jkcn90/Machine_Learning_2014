@@ -123,13 +123,6 @@ def run():
                                                             key = itemgetter(1))
     print('The minimum of the validation error was: ' + str(minimum_average_validation_error) + '%')
     
-    # Calculate the number of support vectors
-    minimum_validation_error_classifier = weight_list[minimum_index]
-    is_support_vector = [1 if is_spam_list_training[i]*np.dot(minimum_validation_error_classifier,
-                                                              feature_vector_list_training[i]) <= 1
-                         else 0 for i in range(0, len(feature_vector_list_training))]
-    number_of_support_vectors = sum(is_support_vector)
-
     # Setup test set data
     (feature_vector_list_training,
      is_spam_list_training,
@@ -151,4 +144,10 @@ def run():
     
     print('Error on the test set: ' + str(test_set_error*100) + '%')
     
+    # Calculate the number of support vectors
+    is_support_vector = [1 if is_spam_list_training[i]*np.dot(minimum_validation_error_classifier,
+                                                              feature_vector_list_training[i]) <= 1
+                         else 0 for i in range(0, len(feature_vector_list_training))]
+    number_of_support_vectors = sum(is_support_vector)
+
     print('Number of support vectors: ' + str(number_of_support_vectors))
