@@ -57,7 +57,7 @@ def run():
                                                           key = itemgetter(1))
     minimum_lambda = lambda_set[minimum_index]
     print('The best lambda value is: ' + str(minimum_lambda) + ' (with error: ' +
-            str(minimum_cross_validation_error) + ')')
+            str(minimum_cross_validation_error) + '%)')
 
     classifier = multi_class_prediction.multi_class_prediction_train(
                     feature_vector_list_training, integer_list_training, minimum_lambda)
@@ -65,7 +65,7 @@ def run():
     test_error = multi_class_prediction.multi_class_prediction_test(
                     classifier, feature_vector_list_testing, integer_list_testing)
     
-    print('The test error is: ' + str(test_error))
+    print('The test error is: ' + str(100*test_error) + '%')
 
 def run_libsvm():
     # Part 2/libsvm

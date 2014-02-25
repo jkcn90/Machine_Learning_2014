@@ -70,7 +70,7 @@ def evaluate_svm_objective(weight_vector, feature_vector_list, is_spam_list, lam
     average_hinge_loss_error = calculate_average_hinge_loss_error(weight_vector, 
                                                                   feature_vector_list, is_spam_list)
 
-    svm_objective = (lambda_ / 2.0)*np.linalg.norm(weight_vector) + average_hinge_loss_error
+    svm_objective = (lambda_ / 2.0)*np.dot(weight_vector, weight_vector) + average_hinge_loss_error
     return svm_objective
 
 def calculate_average_hinge_loss_error(weight_vector, feature_vector_list, is_spam_list):

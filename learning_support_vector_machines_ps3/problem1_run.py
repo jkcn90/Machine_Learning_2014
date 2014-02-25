@@ -123,23 +123,32 @@ def run():
                                                             key = itemgetter(1))
     print('The minimum of the validation error was: ' + str(minimum_average_validation_error) + '%')
     
-    # Calculate Test Error
+    # Calculate the number of support vectors
     minimum_validation_error_classifier = weight_list[minimum_index]
-    
+    is_support_vector = [1 if is_spam_list_training[i]*np.dot(minimum_validation_error_classifier,
+                                                              feature_vector_list_training[i]) <= 1
+                         else 0 for i in range(0, len(feature_vector_list_training))]
+    number_of_support_vectors = sum(is_support_vector)
+
     # Setup test set data
+    (feature_vector_list_training,
+     is_spam_list_training,
+     vocabulary_list) = create_feature_vectors.run_spam('./input_data/spam_train.txt')
+
     (feature_vector_list_test,
      is_spam_list_test,
      _) = create_feature_vectors.run_spam('./input_data/spam_test.txt', vocabulary_list)
     
+    # Calculate Test Error
+    minimum_lambda = lambda_set[minimum_index]
+    (minimum_validation_error_classifier, _) = pegasos_svm.pegasos_svm_train(
+                                                    feature_vector_list_training,
+                                                    is_spam_list_training, minimum_lambda)
+
     test_set_error = pegasos_svm.pegasos_svm_test(minimum_validation_error_classifier,
                                                   feature_vector_list_test,
                                                   is_spam_list_test)
     
     print('Error on the test set: ' + str(test_set_error*100) + '%')
     
-    # Calculate the number of support vectors
-    is_support_vector = [1 if is_spam_list_training[i]*np.dot(minimum_validation_error_classifier,
-                                                              feature_vector_list_training[i]) <= 1
-                         else 0 for i in range(0, len(feature_vector_list_training))]
-    number_of_support_vectors = sum(is_support_vector)
     print('Number of support vectors: ' + str(number_of_support_vectors))
