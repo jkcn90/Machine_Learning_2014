@@ -2,6 +2,7 @@ import numpy as np
 
 def get_accuracy(predicted, actual):
     actual = np.array(actual)
+    actual = [x.replace('.', '') for x in actual]
     number_of_values = len(predicted)
 
     number_correct = sum([1 for ix in range(0, number_of_values) 
@@ -11,7 +12,6 @@ def get_accuracy(predicted, actual):
 
 def run(clf, training_data, training_labels, validation_data, validation_labels):
     clf.fit(training_data, training_labels)
-
     predicted_training_labels = clf.predict(training_data)
     predicted_validation_labels = clf.predict(validation_data)
 

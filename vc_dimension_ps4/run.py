@@ -18,48 +18,80 @@ else:
 
 # Run Script for ps4 (VC-dimension and Decision Trees)
 import preprocess_data
-import get_training_accuracy
+import classifier_run
 from sklearn.tree import DecisionTreeClassifier as dtc
-
-CURSOR_UP_ONE = '\x1b[1A'
-ERASE_LINE = '\x1b[2K'
+from sklearn.ensemble import RandomForestClassifier as rfc
+from sklearn.tree import export_graphviz
+import get_training_accuracy
+import StringIO
+import pydot 
 
 # Part 1/2: Split Training data into training and validation set, fill in missing values, and map
 # categorical features to boolean features
-(training_data, training_labels, validation_data, validation_labels) = preprocess_data.run(0.7)
+(training_data, training_labels,
+ validation_data, validation_labels) = preprocess_data.run_for_training_data(0.7)
 
-max_depth_list = range(1, 31)
-training_accuracy_list = []
-validation_accuracy_list = []
-for this_max_depth in max_depth_list:
-    print('Processing max depth: ' + str(this_max_depth) + '/' + str(len(max_depth_list)))
-    clf = dtc(criterion='entropy', max_depth=this_max_depth)
-    (training_accuracy, validation_accuracy) = get_training_accuracy.run(clf, training_data,
-                                                                         training_labels,
-                                                                         validation_data,
-                                                                         validation_labels)
-    training_accuracy_list.append(training_accuracy)
-    validation_accuracy_list.append(validation_accuracy)
-    print(CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE)
+# Align data
+missing_headers = training_data.columns.diff(validation_data.columns)
+if len(missing_headers) > 0:
+    validation_data[missing_headers] = training_data[missing_headers]
+    validation_data[missing_headers] = validation_data[missing_headers].applymap(lambda x: False)
 
-# Plot data ------------------------------------------------------------------------------------
-pylab.plot(max_depth_list, training_accuracy_list)
-pylab.plot(max_depth_list, validation_accuracy_list)
+missing_headers = validation_data.columns.diff(training_data.columns)
+if len(missing_headers) > 0:
+    training_data[missing_headers] = validation_data[missing_headers]
+    training_data[missing_headers] = training_data[missing_headers].applymap(lambda x: False)
 
-pylab.xlabel('Max Depth')
-pylab.ylabel('Accuracy (% out of 100')
-pylab.title('Training and Validation Accuracy as function of Max Depth')
-pylab.legend(['Training Accuracy', 'Validation Accuracy'], loc=2)
-pylab.grid(True)
-pylab.savefig("Accuracy_vs_Max_Depth.png")
-#pylab.show()
-pylab.close()
-pylab.clf()
-# End plot data --------------------------------------------------------------------------------
+# Process Decision Tree
+best_max_depth = classifier_run.run_max_depth(training_data, training_labels,
+                                              validation_data, validation_labels)
+best_min_samples_leaf = classifier_run.run_min_samples_leaf(training_data, training_labels,
+                                                            validation_data, validation_labels)
+print('Optimal max depth was: ' + str(best_max_depth))
+print('Optimal min samples leaf: ' + str(best_min_samples_leaf))
 
+clf = dtc(criterion='entropy', max_depth=best_max_depth, min_samples_leaf=best_min_samples_leaf)
+clf.fit(training_data, training_labels)
+dot_data = StringIO.StringIO()
+export_graphviz(clf, out_file=dot_data, max_depth=2) 
+graph = pydot.graph_from_dot_data(dot_data.getvalue()) 
+graph.write_pdf("Decision_Tree.pdf") 
 
-min_samples_leaf_list = range(1, 51)
-clf = dtc(criterion='entropy', max_depth=None, min_samples_leaf=1)
+(best_n_estimator, best_n_estimator_accuracy) = classifier_run.run_random_forest(
+                                                   training_data, training_labels,
+                                                   validation_data, validation_labels)
+(best_n_estimator_modified, 
+ best_n_estimator_modified_accuracy) = classifier_run.run_random_forest(
+                                            training_data, training_labels, validation_data,
+                                            validation_labels, best_max_depth=30,
+                                            best_min_samples_leaf=1)
+
+print('Optimal N Estimator with default settings was: ' + str(best_n_estimator) +
+      ' with accuracy: ' + str(best_n_estimator_accuracy))
+print('Optimal N Estimator with modified settings was: ' + str(best_n_estimator_modified) + 
+      ' with accuracy: ' + str(best_n_estimator_modified_accuracy))
+
+# Get Test error with best configuration of Decision Tree and Random Forest
+(training_data, training_labels, _, _) = preprocess_data.run_for_training_data(1)
+(test_data, test_labels) = preprocess_data.run_for_test_data()
+
+# Align data
+missing_headers = training_data.columns.diff(test_data.columns)
+test_data[missing_headers] = training_data[missing_headers].applymap(lambda x: False)
+
+# Decision Tree
+clf = dtc(criterion='entropy', max_depth=best_max_depth, min_samples_leaf=best_min_samples_leaf)
+(_, test_accuracy_dt) = get_training_accuracy.run(clf, training_data, training_labels,
+                                                  test_data, test_labels)
+
+# Random Forest
+clf = rfc(n_estimators=best_n_estimator_modified, max_depth=best_max_depth,
+          min_samples_leaf=best_min_samples_leaf)
+(_, test_accuracy_rf) = get_training_accuracy.run(clf, training_data, training_labels,
+                                                  test_data, test_labels)
+
+print('Test accuracy for Decision Tree: ' + str(test_accuracy_dt))
+print('Test accuracy for Random Forest: ' + str(test_accuracy_rf))
 
 print('\n=========================================================================================')
 print('Script complete')
